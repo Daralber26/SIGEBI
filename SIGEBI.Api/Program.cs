@@ -2,10 +2,9 @@ using Microsoft.EntityFrameworkCore;
 using SIGEBI.Application.Abstractions;
 using SIGEBI.Application.UseCases.Auth;
 using SIGEBI.Application.UseCases.Catalogo;
+using SIGEBI.Application.UseCases.Recursos;
 using SIGEBI.Infrastructure.Persistence;
 using SIGEBI.Infrastructure.Repositories;
-using SIGEBI.Application.UseCases.Recursos;
-
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -22,6 +21,10 @@ builder.Services.AddScoped<IRecursoRepository, RecursoRepositoryEf>();
 // Casos de uso
 builder.Services.AddScoped<ListarCatalogo>();
 builder.Services.AddScoped<LoginUsuario>();
+
+builder.Services.AddScoped<CrearRecurso>();
+builder.Services.AddScoped<ActualizarRecurso>();
+builder.Services.AddScoped<EliminarRecurso>();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -43,6 +46,3 @@ app.MapControllers();
 app.Run();
 
 
-
-
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
