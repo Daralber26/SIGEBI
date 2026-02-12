@@ -4,16 +4,17 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SIGEBI.Contracts.Resources
+namespace SIGEBI.Contracts.Resources;
+
+public class ResourceDto
 {
-    public class ResourceDto
-    {
-        public int Id { get; set; }
+    public Guid Id { get; set; }
 
-        public string Title { get; set; } = string.Empty;
+    public string Titulo { get; set; } = string.Empty;
 
-        public string Author { get; set; } = string.Empty;
+    public string Autor { get; set; } = string.Empty;
 
-        public int AvailableCopies { get; set; }
-    }
+    public string Isbn { get; set; } = string.Empty;
+
+    public int CopiasDisponibles { get; set; }
 }
