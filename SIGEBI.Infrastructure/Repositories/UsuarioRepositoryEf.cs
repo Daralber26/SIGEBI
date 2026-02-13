@@ -18,4 +18,9 @@ public class UsuarioRepositoryEf : IUsuarioRepository
     {
         return _db.Usuarios.FirstOrDefaultAsync(u => u.Email == email, ct);
     }
+
+    public Task<Usuario?> ObtenerPorIdAsync(Guid id, CancellationToken ct)
+    {
+        return _db.Usuarios.FirstOrDefaultAsync(u => u.Id == id, ct);
+    }
 }

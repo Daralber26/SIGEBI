@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using SIGEBI.Application.Abstractions;
 using SIGEBI.Application.UseCases.Auth;
 using SIGEBI.Application.UseCases.Catalogo;
+using SIGEBI.Application.UseCases.Prestamos;
 using SIGEBI.Application.UseCases.Recursos;
 using SIGEBI.Infrastructure.Persistence;
 using SIGEBI.Infrastructure.Repositories;
@@ -14,9 +15,10 @@ builder.Services.AddControllers();
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-// Repositorios
+// Repositorios (EF)
 builder.Services.AddScoped<IUsuarioRepository, UsuarioRepositoryEf>();
 builder.Services.AddScoped<IRecursoRepository, RecursoRepositoryEf>();
+builder.Services.AddScoped<IPrestamoRepository, PrestamoRepositoryEf>();
 
 // Casos de uso
 builder.Services.AddScoped<ListarCatalogo>();
@@ -25,6 +27,8 @@ builder.Services.AddScoped<LoginUsuario>();
 builder.Services.AddScoped<CrearRecurso>();
 builder.Services.AddScoped<ActualizarRecurso>();
 builder.Services.AddScoped<EliminarRecurso>();
+
+builder.Services.AddScoped<CrearPrestamo>();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -44,5 +48,3 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
-
-
