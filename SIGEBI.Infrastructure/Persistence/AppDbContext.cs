@@ -10,4 +10,7 @@ public class AppDbContext : DbContext
     public DbSet<Recurso> Recursos => Set<Recurso>();
     public DbSet<Usuario> Usuarios => Set<Usuario>();
     public DbSet<Prestamo> Prestamos => Set<Prestamo>();
+
+    public DbSet<Ejemplar> Ejemplares { get; set; }
+
 }

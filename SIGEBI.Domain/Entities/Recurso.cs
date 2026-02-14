@@ -1,4 +1,7 @@
-﻿namespace SIGEBI.Domain.Entities;
+﻿using System.Collections.Generic;
+
+
+namespace SIGEBI.Domain.Entities;
 
 public class Recurso
 {
@@ -23,4 +26,7 @@ public class Recurso
         Autor = autor;
         Isbn = isbn;
     }
+
+    public ICollection<Ejemplar> Ejemplares { get; set; } = new List<Ejemplar>();
+
 }

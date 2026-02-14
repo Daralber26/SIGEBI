@@ -24,10 +24,11 @@ public class PrestamoRepositoryEf : IPrestamoRepository
         return _db.SaveChangesAsync(ct);
     }
 
-    public Task<bool> ExistePrestamoActivoAsync(Guid recursoId, CancellationToken ct)
+    // Ahora se valida por EjemplarId (porque el préstamo es por ejemplar)
+    public Task<bool> ExistePrestamoActivoAsync(Guid ejemplarId, CancellationToken ct)
     {
         return _db.Prestamos.AnyAsync(
-            p => p.RecursoId == recursoId && p.FechaDevolucion == null,
+            p => p.EjemplarId == ejemplarId && p.FechaDevolucion == null,
             ct
         );
     }
