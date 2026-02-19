@@ -33,6 +33,8 @@ builder.Services.AddScoped<EliminarRecurso>();
 builder.Services.AddScoped<CrearPrestamo>();
 
 builder.Services.AddScoped<CrearEjemplar>(); //
+builder.Services.AddScoped<DevolverPrestamo>();
+
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

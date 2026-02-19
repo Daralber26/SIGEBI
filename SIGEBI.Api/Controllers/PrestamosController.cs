@@ -17,4 +17,15 @@ public class PrestamosController : ControllerBase
         var prestamo = await crear.Ejecutar(request, ct);
         return Ok(prestamo);
     }
+
+    [HttpPut("{id:guid}/devolver")]
+    public async Task<IActionResult> Devolver(
+    [FromRoute] Guid id,
+    [FromServices] DevolverPrestamo devolver,
+    CancellationToken ct)
+    {
+        await devolver.EjecutarAsync(id, ct);
+        return Ok(new { Message = "Préstamo devuelto correctamente." });
+    }
+
 }
