@@ -15,17 +15,28 @@ public class PrestamosController : ControllerBase
         CancellationToken ct)
     {
         var prestamo = await crear.Ejecutar(request, ct);
-        return Ok(prestamo);
+
+        return Ok(new PrestamoResponse(
+            prestamo.Id,
+            prestamo.UsuarioId,
+            prestamo.EjemplarId,
+            prestamo.FechaPrestamo,
+            prestamo.FechaVencimiento,
+            prestamo.FechaDevolucion
+        ));
     }
 
     [HttpPut("{id:guid}/devolver")]
     public async Task<IActionResult> Devolver(
-    [FromRoute] Guid id,
-    [FromServices] DevolverPrestamo devolver,
-    CancellationToken ct)
+        [FromRoute] Guid id,
+        [FromServices] DevolverPrestamo devolver,
+        CancellationToken ct)
     {
         await devolver.EjecutarAsync(id, ct);
-        return Ok(new { Message = "Préstamo devuelto correctamente." });
-    }
 
+        return Ok(new
+        {
+            message = "Préstamo devuelto correctamente."
+        });
+    }
 }

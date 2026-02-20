@@ -7,6 +7,7 @@ using SIGEBI.Application.UseCases.Prestamos;
 using SIGEBI.Application.UseCases.Recursos;
 using SIGEBI.Infrastructure.Persistence;
 using SIGEBI.Infrastructure.Repositories;
+using SIGEBI.Api; // IMPORTANTE (para UseApiExceptionHandling y UseApiAuditing)
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,7 +21,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 builder.Services.AddScoped<IUsuarioRepository, UsuarioRepositoryEf>();
 builder.Services.AddScoped<IRecursoRepository, RecursoRepositoryEf>();
 builder.Services.AddScoped<IPrestamoRepository, PrestamoRepositoryEf>();
-builder.Services.AddScoped<IEjemplarRepository, EjemplarRepositoryEf>(); // 
+builder.Services.AddScoped<IEjemplarRepository, EjemplarRepositoryEf>();
 
 // Casos de uso
 builder.Services.AddScoped<ListarCatalogo>();
@@ -32,9 +33,8 @@ builder.Services.AddScoped<EliminarRecurso>();
 
 builder.Services.AddScoped<CrearPrestamo>();
 
-builder.Services.AddScoped<CrearEjemplar>(); //
+builder.Services.AddScoped<CrearEjemplar>();
 builder.Services.AddScoped<DevolverPrestamo>();
-
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -48,6 +48,12 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+// Middleware global de errores (tiene que ir ANTES de authorization y controllers)
+app.UseApiExceptionHandling();
+
+//  ESTA ES LA LiNEA QUE FALTABA (auditoría)
+app.UseApiAuditing();
 
 app.UseAuthorization();
 
