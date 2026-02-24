@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SIGEBI.Infrastructure.Persistence;
 
@@ -11,9 +12,11 @@ using SIGEBI.Infrastructure.Persistence;
 namespace SIGEBI.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260224032940_AddPenalizacionYNotificacion")]
+    partial class AddPenalizacionYNotificacion
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -154,8 +157,8 @@ namespace SIGEBI.Infrastructure.Migrations
                     b.Property<int>("Motivo")
                         .HasColumnType("int");
 
-                    b.Property<Guid>("PrestamoId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int>("PrestamoId")
+                        .HasColumnType("int");
 
                     b.Property<Guid>("UsuarioId")
                         .HasColumnType("uniqueidentifier");

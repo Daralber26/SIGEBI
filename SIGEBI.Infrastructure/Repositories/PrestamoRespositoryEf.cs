@@ -36,4 +36,11 @@ public class PrestamoRepositoryEf : IPrestamoRepository
     {
         return _db.Prestamos.FirstOrDefaultAsync(p => p.Id == id, ct);
     }
+
+    public async Task<int> ContarPrestamosActivosPorUsuarioAsync(Guid usuarioId, CancellationToken ct)
+    {
+        return await _db.Prestamos
+            .Where(p => p.UsuarioId == usuarioId && p.FechaDevolucion == null)
+            .CountAsync(ct);
+    }
 }

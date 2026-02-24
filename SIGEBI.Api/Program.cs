@@ -22,6 +22,7 @@ builder.Services.AddScoped<IUsuarioRepository, UsuarioRepositoryEf>();
 builder.Services.AddScoped<IRecursoRepository, RecursoRepositoryEf>();
 builder.Services.AddScoped<IPrestamoRepository, PrestamoRepositoryEf>();
 builder.Services.AddScoped<IEjemplarRepository, EjemplarRepositoryEf>();
+builder.Services.AddScoped<IPenalizacionRepository, PenalizacionRepositoryEf>();
 
 // Casos de uso
 builder.Services.AddScoped<ListarCatalogo>();
