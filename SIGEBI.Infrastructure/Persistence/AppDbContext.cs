@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SIGEBI.Domain.Entities;
+using SIGEBI.Domain.Entities.Dbo;
 
 namespace SIGEBI.Infrastructure.Persistence;
 
@@ -11,6 +12,7 @@ public class AppDbContext : DbContext
     public DbSet<Usuario> Usuarios => Set<Usuario>();
     public DbSet<Prestamo> Prestamos => Set<Prestamo>();
     public DbSet<Ejemplar> Ejemplares => Set<Ejemplar>();
+    public DbSet<Reserva> Reservas => Set<Reserva>();
 
     public DbSet<Auditoria> Auditorias => Set<Auditoria>();
 
@@ -44,7 +46,5 @@ public class AppDbContext : DbContext
             b.Property(x => x.Detalle)
                 .HasMaxLength(300);
         });
-
-        // Si luego se configurar más entidades aquí, se hace igual.
     }
 }

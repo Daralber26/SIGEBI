@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using SIGEBI.Api; // IMPORTANTE (para UseApiExceptionHandling y UseApiAuditing)
 using SIGEBI.Application.Abstractions;
 using SIGEBI.Application.UseCases.Auth;
 using SIGEBI.Application.UseCases.Catalogo;
@@ -7,9 +8,11 @@ using SIGEBI.Application.UseCases.Prestamos;
 using SIGEBI.Application.UseCases.Recursos;
 using SIGEBI.Infrastructure.Persistence;
 using SIGEBI.Infrastructure.Repositories;
-using SIGEBI.Api; // IMPORTANTE (para UseApiExceptionHandling y UseApiAuditing)
+using SIGEBI.Application.UseCases.Reservas;
 
 var builder = WebApplication.CreateBuilder(args);
+
+Console.WriteLine("DefaultConnection = " + builder.Configuration.GetConnectionString("DefaultConnection"));
 
 builder.Services.AddControllers();
 
@@ -22,6 +25,7 @@ builder.Services.AddScoped<IUsuarioRepository, UsuarioRepositoryEf>();
 builder.Services.AddScoped<IRecursoRepository, RecursoRepositoryEf>();
 builder.Services.AddScoped<IPrestamoRepository, PrestamoRepositoryEf>();
 builder.Services.AddScoped<IEjemplarRepository, EjemplarRepositoryEf>();
+builder.Services.AddScoped<IReservaRepository, ReservaRepositoryEf>();
 
 // Casos de uso
 builder.Services.AddScoped<ListarCatalogo>();
@@ -32,7 +36,7 @@ builder.Services.AddScoped<ActualizarRecurso>();
 builder.Services.AddScoped<EliminarRecurso>();
 
 builder.Services.AddScoped<CrearPrestamo>();
-
+builder.Services.AddScoped<CrearReserva>();
 builder.Services.AddScoped<CrearEjemplar>();
 builder.Services.AddScoped<DevolverPrestamo>();
 
