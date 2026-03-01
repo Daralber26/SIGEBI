@@ -10,4 +10,17 @@
     <ProjectReference Include="..\SIGEBI.Contracts\SIGEBI.Contracts.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Modules\Auth\UI\" />
+    <Folder Include="Modules\Catalogo\Dtos\" />
+    <Folder Include="Modules\Catalogo\Repositories\" />
+    <Folder Include="Modules\Catalogo\UI\" />
+    <Folder Include="Modules\Historial\Dtos\" />
+    <Folder Include="Modules\Historial\Repositories\" />
+    <Folder Include="Modules\Historial\UI\" />
+    <Folder Include="Modules\Reservas\Dtos\" />
+    <Folder Include="Modules\Reservas\Repositories\" />
+    <Folder Include="Modules\Reservas\UI\" />
+  </ItemGroup>
+
 </Project>

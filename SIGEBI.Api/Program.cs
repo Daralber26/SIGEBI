@@ -7,9 +7,17 @@ using SIGEBI.Application.UseCases.Prestamos;
 using SIGEBI.Application.UseCases.Recursos;
 using SIGEBI.Infrastructure.Persistence;
 using SIGEBI.Infrastructure.Repositories;
-using SIGEBI.Api; // IMPORTANTE (para UseApiExceptionHandling y UseApiAuditing)
+using SIGEBI.Api;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Logging.ClearProviders();
+builder.Logging.AddConsole();
+
+Console.WriteLine(">>> AQUI LLEGUE (ANTES DE SERVICES)");
+
+var cs = builder.Configuration.GetConnectionString("DefaultConnection");
+Console.WriteLine(">>> DefaultConnection = " + cs);
 
 builder.Services.AddControllers();
 
@@ -49,10 +57,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-// Middleware global de errores (tiene que ir ANTES de authorization y controllers)
 app.UseApiExceptionHandling();
-
-//  ESTA ES LA LiNEA QUE FALTABA (auditoría)
 app.UseApiAuditing();
 
 app.UseAuthorization();
