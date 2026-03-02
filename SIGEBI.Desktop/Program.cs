@@ -5,6 +5,8 @@ using Microsoft.Extensions.Options;
 using SIGEBI.Desktop.Forms;
 using SIGEBI.Desktop.Modules.Auth.Interfaces;
 using SIGEBI.Desktop.Modules.Auth.Services;
+using SIGEBI.Desktop.Modules.Catalogo.Interfaces;
+using SIGEBI.Desktop.Modules.Catalogo.Services;
 using SIGEBI.Desktop.Shared;
 
 namespace SIGEBI.Desktop
@@ -36,8 +38,17 @@ namespace SIGEBI.Desktop
 
                     services.AddScoped<IAuthService, AuthService>();
 
+                    //  Catalogo
+                    services.AddScoped<ICatalogoService, CatalogoService>();
+
+                    //Services
+
                     services.AddTransient<LoginForm>();
                     services.AddTransient<MainForm>();
+                    services.AddTransient<CatalogoForm>();
+
+                    // Si MainForm crea/abre CatalogoForm desde DI,
+                    // también tendrás que registrar CatalogoForm (lo vemos en el paso 4).
                 })
                 .Build();
 

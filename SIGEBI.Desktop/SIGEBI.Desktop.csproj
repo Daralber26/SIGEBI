@@ -19,7 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Mudules\Catalogo\" />
+    <Folder Include="Mudules\Prestamos\" />
     <Folder Include="Mudules\Prestamos\" />
   </ItemGroup>
 

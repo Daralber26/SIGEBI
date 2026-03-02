@@ -28,12 +28,34 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 450);
-            this.Text = "MainForm";
+            btnCatalogo = new Button();
+            SuspendLayout();
+            // 
+            // btnCatalogo
+            // 
+            btnCatalogo.BackColor = SystemColors.AppWorkspace;
+            btnCatalogo.Font = new Font("Segoe UI", 11.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            btnCatalogo.Location = new Point(309, 171);
+            btnCatalogo.Name = "btnCatalogo";
+            btnCatalogo.Size = new Size(172, 64);
+            btnCatalogo.TabIndex = 0;
+            btnCatalogo.Text = "Catalogo";
+            btnCatalogo.UseVisualStyleBackColor = false;
+            btnCatalogo.Click += btnCatalogo_Click;
+            // 
+            // MainForm
+            // 
+            AutoScaleDimensions = new SizeF(7F, 15F);
+            AutoScaleMode = AutoScaleMode.Font;
+            ClientSize = new Size(800, 450);
+            Controls.Add(btnCatalogo);
+            Name = "MainForm";
+            Text = "MainForm";
+            ResumeLayout(false);
         }
 
         #endregion
+
+        private Button btnCatalogo;
     }
 }

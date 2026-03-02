@@ -11,6 +11,20 @@ public sealed class ApiClient
         _http = http;
     }
 
+    public async Task<TResponse> GetAsync<TResponse>(string path, CancellationToken ct = default)
+    {
+        using var response = await _http.GetAsync(path, ct);
+
+        if (!response.IsSuccessStatusCode)
+        {
+            var error = await response.Content.ReadAsStringAsync(ct);
+            throw new ApiException((int)response.StatusCode, error);
+        }
+
+        var data = await response.Content.ReadFromJsonAsync<TResponse>(cancellationToken: ct);
+        return data ?? throw new ApiException((int)response.StatusCode, "Respuesta vacía del servidor.");
+    }
+
     public async Task<TResponse> PostAsync<TRequest, TResponse>(string path, TRequest body, CancellationToken ct = default)
     {
         using var response = await _http.PostAsJsonAsync(path, body, ct);
