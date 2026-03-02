@@ -9,11 +9,16 @@ public class CrearPrestamo
 {
     private readonly IPrestamoRepository _prestamos;
     private readonly IEjemplarRepository _ejemplares;
+    private readonly IReservaRepository _reservas;
 
-    public CrearPrestamo(IPrestamoRepository prestamos, IEjemplarRepository ejemplares)
+    public CrearPrestamo(
+        IPrestamoRepository prestamos,
+        IEjemplarRepository ejemplares,
+        IReservaRepository reservas)
     {
         _prestamos = prestamos;
         _ejemplares = ejemplares;
+        _reservas = reservas;
     }
 
     public async Task<Prestamo> Ejecutar(CreatePrestamoRequest req, CancellationToken ct)
@@ -38,10 +43,15 @@ public class CrearPrestamo
         if (yaPrestado)
             throw new InvalidOperationException("Ya existe un préstamo activo para este ejemplar.");
 
-        // 4) Marcar ejemplar como prestado (dominio)
+        // 4) Validar que no esté reservado (reserva activa)
+        var reservado = await _reservas.ExistsActivaByEjemplarAsync(req.EjemplarId, ct);
+        if (reservado)
+            throw new InvalidOperationException("El ejemplar está reservado. No se puede prestar.");
+
+        // 5) Marcar ejemplar como prestado (dominio)
         ejemplar.MarcarPrestado();
 
-        // 5) Crear préstamo
+        // 6) Crear préstamo
         var prestamo = new Prestamo(
             req.UsuarioId,
             req.EjemplarId,
@@ -50,7 +60,10 @@ public class CrearPrestamo
         );
 
         await _prestamos.AgregarAsync(prestamo, ct);
+
+        // Guardado seguro: persistir préstamo y el cambio del ejemplar
         await _prestamos.GuardarCambiosAsync(ct);
+        await _ejemplares.GuardarCambiosAsync(ct);
 
         return prestamo;
     }
