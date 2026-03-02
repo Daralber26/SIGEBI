@@ -12,9 +12,11 @@ public class AppDbContext : DbContext
     public DbSet<Usuario> Usuarios => Set<Usuario>();
     public DbSet<Prestamo> Prestamos => Set<Prestamo>();
     public DbSet<Ejemplar> Ejemplares => Set<Ejemplar>();
-    public DbSet<Reserva> Reservas => Set<Reserva>();   
+    public DbSet<Reserva> Reservas => Set<Reserva>();
 
     public DbSet<Auditoria> Auditorias => Set<Auditoria>();
+    public DbSet<Penalizacion> Penalizaciones => Set<Penalizacion>();
+    public DbSet<Notificacion> Notificaciones => Set<Notificacion>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -63,12 +65,36 @@ public class AppDbContext : DbContext
             b.Property(x => x.EjemplarId).IsRequired();
             b.Property(x => x.FechaCreacionUtc).IsRequired();
 
-            //  unico: un usuario no puede reservar el mismo ejemplar activo
+            // Único: un usuario no puede reservar el mismo ejemplar si la reserva está activa
             b.HasIndex(x => new { x.UsuarioId, x.EjemplarId })
                 .HasFilter("[FechaCancelacionUtc] IS NULL")
                 .IsUnique();
         });
 
-        // Si luego se configuran más entidades aquí, se hace igual.
+        // =========================
+        // PENALIZACION
+        // =========================
+        modelBuilder.Entity<Penalizacion>(b =>
+        {
+            b.ToTable("Penalizaciones");
+            b.HasKey(x => x.Id);
+
+            // Evitar truncamiento
+            b.Property(x => x.Monto)
+                .HasPrecision(18, 2);
+        });
+
+        // =========================
+        // NOTIFICACION
+        // =========================
+        modelBuilder.Entity<Notificacion>(b =>
+        {
+            b.ToTable("Notificaciones");
+            b.HasKey(x => x.Id);
+
+            b.Property(x => x.Mensaje)
+                .HasMaxLength(500)
+                .IsRequired();
+        });
     }
 }

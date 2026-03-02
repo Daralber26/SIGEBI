@@ -8,7 +8,7 @@ using SIGEBI.Application.UseCases.Recursos;
 using SIGEBI.Application.UseCases.Reservas;
 using SIGEBI.Infrastructure.Persistence;
 using SIGEBI.Infrastructure.Repositories;
-using SIGEBI.Api; // IMPORTANTE (para UseApiExceptionHandling y UseApiAuditing)
+using SIGEBI.Api; // para UseApiExceptionHandling y UseApiAuditing
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -24,8 +24,9 @@ builder.Services.AddScoped<IRecursoRepository, RecursoRepositoryEf>();
 builder.Services.AddScoped<IPrestamoRepository, PrestamoRepositoryEf>();
 builder.Services.AddScoped<IEjemplarRepository, EjemplarRepositoryEf>();
 builder.Services.AddScoped<IReservaRepository, ReservaRepositoryEf>();
+builder.Services.AddScoped<IPenalizacionRepository, PenalizacionRepositoryEf>();
 
-// NUEVO: Catálogo (calcula copias disponibles)
+// Catálogo (calcula copias disponibles)
 builder.Services.AddScoped<ICatalogoRepository, CatalogoRepository>();
 
 // Casos de uso
@@ -55,7 +56,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-// Middleware global de errores (tiene que ir ANTES de authorization y controllers)
+// Middleware global de errores (antes de authorization y controllers)
 app.UseApiExceptionHandling();
 
 // Auditoría
