@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SIGEBI.Infrastructure.Persistence;
 
@@ -11,9 +12,11 @@ using SIGEBI.Infrastructure.Persistence;
 namespace SIGEBI.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260302050838_AddReservas")]
+    partial class AddReservas
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -74,21 +77,21 @@ namespace SIGEBI.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("EjemplarId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<DateTime?>("FechaCancelacionUtc")
                         .HasColumnType("datetime2");
 
                     b.Property<DateTime>("FechaCreacionUtc")
                         .HasColumnType("datetime2");
 
+                    b.Property<Guid>("RecursoId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<Guid>("UsuarioId")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("UsuarioId", "EjemplarId")
+                    b.HasIndex("UsuarioId", "RecursoId")
                         .IsUnique()
                         .HasFilter("[FechaCancelacionUtc] IS NULL");
 

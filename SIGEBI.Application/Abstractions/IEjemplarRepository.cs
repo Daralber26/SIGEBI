@@ -8,4 +8,7 @@ public interface IEjemplarRepository
     Task GuardarCambiosAsync(CancellationToken ct);
     Task<bool> ExisteCodigoAsync(string codigo, CancellationToken ct);
     Task<Ejemplar?> ObtenerPorIdAsync(Guid id, CancellationToken ct);
+
+    Task<Guid?> GetEjemplarDisponibleIdAsync(Guid recursoId, CancellationToken ct = default);
+    Task<Guid?> GetEjemplarDisponibleParaReservaIdAsync(Guid recursoId, CancellationToken ct);
 }

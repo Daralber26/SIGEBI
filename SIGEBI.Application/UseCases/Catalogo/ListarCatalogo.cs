@@ -5,21 +5,15 @@ namespace SIGEBI.Application.UseCases.Catalogo;
 
 public class ListarCatalogo
 {
-    private readonly IRecursoRepository _repo;
+    private readonly ICatalogoRepository _repo;
 
-    public ListarCatalogo(IRecursoRepository repo) => _repo = repo;
-
-    public async Task<List<ResourceDto>> ExecuteAsync(CancellationToken ct)
+    public ListarCatalogo(ICatalogoRepository repo)
     {
-        var recursos = await _repo.ListarAsync(ct);
+        _repo = repo;
+    }
 
-        return recursos.Select(r => new ResourceDto
-        {
-            Id = r.Id,
-            Titulo = r.Titulo,
-            Autor = r.Autor,
-            Isbn = r.Isbn,
-            CopiasDisponibles = 0 // luego lo conectamos con Ejemplares
-        }).ToList();
+    public Task<List<ResourceDto>> ExecuteAsync(CancellationToken ct)
+    {
+        return _repo.ListarCatalogoAsync(ct);
     }
 }

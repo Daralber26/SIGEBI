@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SIGEBI.Domain.Entities;
+using SIGEBI.Domain.Entities.Dbo;
 
 namespace SIGEBI.Infrastructure.Persistence;
 
@@ -11,6 +12,7 @@ public class AppDbContext : DbContext
     public DbSet<Usuario> Usuarios => Set<Usuario>();
     public DbSet<Prestamo> Prestamos => Set<Prestamo>();
     public DbSet<Ejemplar> Ejemplares => Set<Ejemplar>();
+    public DbSet<Reserva> Reservas => Set<Reserva>();   
 
     public DbSet<Auditoria> Auditorias => Set<Auditoria>();
 
@@ -18,6 +20,9 @@ public class AppDbContext : DbContext
     {
         base.OnModelCreating(modelBuilder);
 
+        // =========================
+        // AUDITORIA
+        // =========================
         modelBuilder.Entity<Auditoria>(b =>
         {
             b.ToTable("Auditorias");
@@ -45,6 +50,25 @@ public class AppDbContext : DbContext
                 .HasMaxLength(300);
         });
 
-        // Si luego se configurar más entidades aquí, se hace igual.
+        // =========================
+        // RESERVA
+        // =========================
+        modelBuilder.Entity<Reserva>(b =>
+        {
+            b.ToTable("Reservas");
+
+            b.HasKey(x => x.Id);
+
+            b.Property(x => x.UsuarioId).IsRequired();
+            b.Property(x => x.EjemplarId).IsRequired();
+            b.Property(x => x.FechaCreacionUtc).IsRequired();
+
+            //  unico: un usuario no puede reservar el mismo ejemplar activo
+            b.HasIndex(x => new { x.UsuarioId, x.EjemplarId })
+                .HasFilter("[FechaCancelacionUtc] IS NULL")
+                .IsUnique();
+        });
+
+        // Si luego se configuran más entidades aquí, se hace igual.
     }
 }
