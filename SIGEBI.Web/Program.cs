@@ -1,11 +1,9 @@
-using System;
-
 var builder = WebApplication.CreateBuilder(args);
 
 // Razor Pages
 builder.Services.AddRazorPages();
 
-//Session (para guardar usuario logueado)
+// Session (para guardar usuario logueado)
 builder.Services.AddSession(options =>
 {
     options.IdleTimeout = TimeSpan.FromHours(2);
@@ -13,10 +11,10 @@ builder.Services.AddSession(options =>
     options.Cookie.IsEssential = true;
 });
 
-//HttpClient hacia la API
+// HttpClient hacia la API (DEV: usa HTTP para evitar líos de SSL)
 builder.Services.AddHttpClient("SIGEBI.Api", client =>
 {
-    client.BaseAddress = new Uri("https://localhost:7010/");
+    client.BaseAddress = new Uri("http://localhost:5016/");
 });
 
 var app = builder.Build();
@@ -28,12 +26,13 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
+// En DEV puedes dejar esto, pero no es obligatorio si usas http hacia API.
 app.UseHttpsRedirection();
-app.UseStaticFiles();
 
+app.UseStaticFiles();
 app.UseRouting();
 
-//Session debe ir DESPUÉS de Routing y ANTES de Authorization/MapRazorPages
+// Session debe ir después de Routing
 app.UseSession();
 
 app.UseAuthorization();

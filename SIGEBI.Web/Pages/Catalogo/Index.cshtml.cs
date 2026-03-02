@@ -2,7 +2,7 @@ using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace SIGEBI.Web.Pages;
+namespace SIGEBI.Web.Pages.Catalogo;
 
 public class IndexModel : PageModel
 {
@@ -13,13 +13,13 @@ public class IndexModel : PageModel
         _httpClientFactory = httpClientFactory;
     }
 
-    public string? Error { get; set; }
+    public string? Error { get; private set; }
 
     public List<Dictionary<string, string>> Rows { get; private set; } = new();
 
     public async Task<IActionResult> OnGetAsync()
     {
-        // Protección
+        // Protección: solo usuarios logueados
         if (string.IsNullOrWhiteSpace(HttpContext.Session.GetString("UserId")))
             return RedirectToPage("/Login");
 
@@ -47,18 +47,18 @@ public class IndexModel : PageModel
 
             if (doc.RootElement.ValueKind != JsonValueKind.Array)
             {
-                Error = "Formato inesperado del catálogo.";
+                Error = "Formato inesperado del catálogo (no es un arreglo).";
                 return Page();
             }
 
             foreach (var item in doc.RootElement.EnumerateArray())
             {
+                if (item.ValueKind != JsonValueKind.Object) continue;
+
                 var row = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
 
                 foreach (var prop in item.EnumerateObject())
-                {
                     row[prop.Name] = prop.Value.ToString();
-                }
 
                 Rows.Add(row);
             }

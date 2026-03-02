@@ -21,20 +21,20 @@ else
             <tr>
                 <th>Id</th>
                 <th>Título</th>
-                <th>Tipo</th>
                 <th>Autor</th>
-                <th>Disponible</th>
+                <th>ISBN</th>
+                <th>Copias Disponibles</th>
             </tr>
         </thead>
         <tbody>
             @foreach (var row in Model.Rows)
             {
                 <tr>
-                    <td>@IndexModel.Get(row, "id", "Id", "recursoId", "RecursoId", "ejemplarId", "EjemplarId")</td>
-                    <td>@IndexModel.Get(row, "titulo", "Titulo", "nombre", "Nombre")</td>
-                    <td>@IndexModel.Get(row, "tipo", "Tipo", "tipoRecurso", "TipoRecurso")</td>
-                    <td>@IndexModel.Get(row, "autor", "Autor")</td>
-                    <td>@IndexModel.Get(row, "disponible", "Disponible", "stock", "Stock")</td>
+                    <td>@SIGEBI.Web.Pages.Catalogo.IndexModel.Get(row, "id", "Id")</td>
+                    <td>@SIGEBI.Web.Pages.Catalogo.IndexModel.Get(row, "titulo", "Titulo")</td>
+                    <td>@SIGEBI.Web.Pages.Catalogo.IndexModel.Get(row, "autor", "Autor")</td>
+                    <td>@SIGEBI.Web.Pages.Catalogo.IndexModel.Get(row, "isbn", "ISBN")</td>
+                    <td>@SIGEBI.Web.Pages.Catalogo.IndexModel.Get(row, "copiasDisponibles", "CopiasDisponibles")</td>
                 </tr>
             }
         </tbody>
