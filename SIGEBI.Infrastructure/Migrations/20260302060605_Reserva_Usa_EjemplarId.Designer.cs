@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SIGEBI.Infrastructure.Persistence;
 
@@ -11,9 +12,11 @@ using SIGEBI.Infrastructure.Persistence;
 namespace SIGEBI.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260302060605_Reserva_Usa_EjemplarId")]
+    partial class Reserva_Usa_EjemplarId
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -122,74 +125,6 @@ namespace SIGEBI.Infrastructure.Migrations
                     b.HasIndex("RecursoId");
 
                     b.ToTable("Ejemplares");
-                });
-
-            modelBuilder.Entity("SIGEBI.Domain.Entities.Notificacion", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("Estado")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("FechaCreacionUtc")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("FechaLecturaUtc")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Mensaje")
-                        .IsRequired()
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
-
-                    b.Property<int>("Tipo")
-                        .HasColumnType("int");
-
-                    b.Property<Guid>("UsuarioId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Notificaciones", (string)null);
-                });
-
-            modelBuilder.Entity("SIGEBI.Domain.Entities.Penalizacion", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("Estado")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("FechaCreacionUtc")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("FechaFinUtc")
-                        .HasColumnType("datetime2");
-
-                    b.Property<decimal?>("Monto")
-                        .HasPrecision(18, 2)
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<int>("Motivo")
-                        .HasColumnType("int");
-
-                    b.Property<Guid>("PrestamoId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("UsuarioId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Penalizaciones", (string)null);
                 });
 
             modelBuilder.Entity("SIGEBI.Domain.Entities.Prestamo", b =>

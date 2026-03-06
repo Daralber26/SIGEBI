@@ -5,12 +5,14 @@ using SIGEBI.Application.UseCases.Catalogo;
 using SIGEBI.Application.UseCases.Ejemplares;
 using SIGEBI.Application.UseCases.Prestamos;
 using SIGEBI.Application.UseCases.Recursos;
+using SIGEBI.Application.UseCases.Reservas;
 using SIGEBI.Infrastructure.Persistence;
 using SIGEBI.Infrastructure.Repositories;
-using SIGEBI.Api;
+using SIGEBI.Api; // para UseApiExceptionHandling y UseApiAuditing
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Logs de consola
 builder.Logging.ClearProviders();
 builder.Logging.AddConsole();
 
@@ -30,6 +32,11 @@ builder.Services.AddScoped<IUsuarioRepository, UsuarioRepositoryEf>();
 builder.Services.AddScoped<IRecursoRepository, RecursoRepositoryEf>();
 builder.Services.AddScoped<IPrestamoRepository, PrestamoRepositoryEf>();
 builder.Services.AddScoped<IEjemplarRepository, EjemplarRepositoryEf>();
+builder.Services.AddScoped<IReservaRepository, ReservaRepositoryEf>();
+builder.Services.AddScoped<IPenalizacionRepository, PenalizacionRepositoryEf>();
+
+// Catálogo (calcula copias disponibles)
+builder.Services.AddScoped<ICatalogoRepository, CatalogoRepository>();
 
 // Casos de uso
 builder.Services.AddScoped<ListarCatalogo>();
@@ -40,9 +47,9 @@ builder.Services.AddScoped<ActualizarRecurso>();
 builder.Services.AddScoped<EliminarRecurso>();
 
 builder.Services.AddScoped<CrearPrestamo>();
-
 builder.Services.AddScoped<CrearEjemplar>();
 builder.Services.AddScoped<DevolverPrestamo>();
+builder.Services.AddScoped<CrearReserva>();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -57,7 +64,10 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+// Middleware global de errores
 app.UseApiExceptionHandling();
+
+// Auditoría
 app.UseApiAuditing();
 
 app.UseAuthorization();

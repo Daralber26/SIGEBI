@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SIGEBI.Infrastructure.Persistence;
 
@@ -11,9 +12,11 @@ using SIGEBI.Infrastructure.Persistence;
 namespace SIGEBI.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260224032940_AddPenalizacionYNotificacion")]
+    partial class AddPenalizacionYNotificacion
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -66,33 +69,6 @@ namespace SIGEBI.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Auditorias", (string)null);
-                });
-
-            modelBuilder.Entity("SIGEBI.Domain.Entities.Dbo.Reserva", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("EjemplarId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime?>("FechaCancelacionUtc")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("FechaCreacionUtc")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid>("UsuarioId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UsuarioId", "EjemplarId")
-                        .IsUnique()
-                        .HasFilter("[FechaCancelacionUtc] IS NULL");
-
-                    b.ToTable("Reservas", (string)null);
                 });
 
             modelBuilder.Entity("SIGEBI.Domain.Entities.Ejemplar", b =>
@@ -181,8 +157,8 @@ namespace SIGEBI.Infrastructure.Migrations
                     b.Property<int>("Motivo")
                         .HasColumnType("int");
 
-                    b.Property<Guid>("PrestamoId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int>("PrestamoId")
+                        .HasColumnType("int");
 
                     b.Property<Guid>("UsuarioId")
                         .HasColumnType("uniqueidentifier");

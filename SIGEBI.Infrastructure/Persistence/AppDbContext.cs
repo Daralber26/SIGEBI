@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SIGEBI.Domain.Entities;
+using SIGEBI.Domain.Entities.Dbo;
 
 namespace SIGEBI.Infrastructure.Persistence;
 
@@ -11,13 +12,19 @@ public class AppDbContext : DbContext
     public DbSet<Usuario> Usuarios => Set<Usuario>();
     public DbSet<Prestamo> Prestamos => Set<Prestamo>();
     public DbSet<Ejemplar> Ejemplares => Set<Ejemplar>();
+    public DbSet<Reserva> Reservas => Set<Reserva>();
 
     public DbSet<Auditoria> Auditorias => Set<Auditoria>();
+    public DbSet<Penalizacion> Penalizaciones => Set<Penalizacion>();
+    public DbSet<Notificacion> Notificaciones => Set<Notificacion>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
 
+        // =========================
+        // AUDITORIA
+        // =========================
         modelBuilder.Entity<Auditoria>(b =>
         {
             b.ToTable("Auditorias");
@@ -45,6 +52,49 @@ public class AppDbContext : DbContext
                 .HasMaxLength(300);
         });
 
-        // Si luego se configurar más entidades aquí, se hace igual.
+        // =========================
+        // RESERVA
+        // =========================
+        modelBuilder.Entity<Reserva>(b =>
+        {
+            b.ToTable("Reservas");
+
+            b.HasKey(x => x.Id);
+
+            b.Property(x => x.UsuarioId).IsRequired();
+            b.Property(x => x.EjemplarId).IsRequired();
+            b.Property(x => x.FechaCreacionUtc).IsRequired();
+
+            // Único: un usuario no puede reservar el mismo ejemplar si la reserva está activa
+            b.HasIndex(x => new { x.UsuarioId, x.EjemplarId })
+                .HasFilter("[FechaCancelacionUtc] IS NULL")
+                .IsUnique();
+        });
+
+        // =========================
+        // PENALIZACION
+        // =========================
+        modelBuilder.Entity<Penalizacion>(b =>
+        {
+            b.ToTable("Penalizaciones");
+            b.HasKey(x => x.Id);
+
+            // Evitar truncamiento
+            b.Property(x => x.Monto)
+                .HasPrecision(18, 2);
+        });
+
+        // =========================
+        // NOTIFICACION
+        // =========================
+        modelBuilder.Entity<Notificacion>(b =>
+        {
+            b.ToTable("Notificaciones");
+            b.HasKey(x => x.Id);
+
+            b.Property(x => x.Mensaje)
+                .HasMaxLength(500)
+                .IsRequired();
+        });
     }
 }

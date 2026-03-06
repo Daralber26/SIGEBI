@@ -1,7 +1,7 @@
 ﻿using SIGEBI.Application.Abstractions;
 using SIGEBI.Contracts.Prestamos;
-using SIGEBI.Domain.Enums;
 using SIGEBI.Domain.Entities;
+using SIGEBI.Domain.Enums;
 
 namespace SIGEBI.Application.UseCases.Prestamos;
 
@@ -9,17 +9,50 @@ public class CrearPrestamo
 {
     private readonly IPrestamoRepository _prestamos;
     private readonly IEjemplarRepository _ejemplares;
+    private readonly IReservaRepository _reservas;
+    private readonly IUsuarioRepository _usuarios;
+    private readonly IPenalizacionRepository _penalizaciones;
 
-    public CrearPrestamo(IPrestamoRepository prestamos, IEjemplarRepository ejemplares)
+    private const int MAX_PRESTAMOS_ACTIVOS = 3;
+
+    public CrearPrestamo(
+        IPrestamoRepository prestamos,
+        IEjemplarRepository ejemplares,
+        IReservaRepository reservas,
+        IUsuarioRepository usuarios,
+        IPenalizacionRepository penalizaciones)
     {
         _prestamos = prestamos;
         _ejemplares = ejemplares;
+        _reservas = reservas;
+        _usuarios = usuarios;
+        _penalizaciones = penalizaciones;
     }
 
     public async Task<Prestamo> Ejecutar(CreatePrestamoRequest req, CancellationToken ct)
     {
         if (req.DiasPrestamo <= 0)
             throw new InvalidOperationException("Los días de préstamo deben ser mayor que 0.");
+
+        var utcNow = DateTime.UtcNow;
+
+        // 0) Validar usuario
+        var usuario = await _usuarios.ObtenerPorIdAsync(req.UsuarioId, ct);
+        if (usuario is null)
+            throw new InvalidOperationException("El usuario no existe.");
+
+        if (!usuario.Activo)
+            throw new InvalidOperationException("El usuario está inactivo.");
+
+        // 0.1) Penalizaciones activas bloquean
+        var penalizacionesActivas = await _penalizaciones.GetActivasPorUsuario(req.UsuarioId, ct);
+        if (penalizacionesActivas.Any(p => p.Bloquea(utcNow)))
+            throw new InvalidOperationException("El usuario tiene una penalización activa y no puede realizar préstamos.");
+
+        // 0.2) Límite de préstamos activos
+        var activos = await _prestamos.ContarPrestamosActivosPorUsuarioAsync(req.UsuarioId, ct);
+        if (activos >= MAX_PRESTAMOS_ACTIVOS)
+            throw new InvalidOperationException($"El usuario ya tiene el máximo de préstamos activos ({MAX_PRESTAMOS_ACTIVOS}).");
 
         // 1) Buscar ejemplar
         var ejemplar = await _ejemplares.ObtenerPorIdAsync(req.EjemplarId, ct);
@@ -33,24 +66,35 @@ public class CrearPrestamo
         if (ejemplar.Estado != EjemplarEstado.Disponible)
             throw new InvalidOperationException("El ejemplar no está disponible.");
 
-        // 3) Validar que no tenga préstamo activo
+        // 3) Validar que no tenga préstamo activo (por ejemplar)
         var yaPrestado = await _prestamos.ExistePrestamoActivoAsync(req.EjemplarId, ct);
         if (yaPrestado)
             throw new InvalidOperationException("Ya existe un préstamo activo para este ejemplar.");
 
-        // 4) Marcar ejemplar como prestado (dominio)
+        // 4) Validar que no esté reservado (reserva activa)
+        var reservado = await _reservas.ExistsActivaByEjemplarAsync(req.EjemplarId, ct);
+        if (reservado)
+            throw new InvalidOperationException("El ejemplar está reservado. No se puede prestar.");
+
+        // 5) Marcar ejemplar como prestado (dominio)
         ejemplar.MarcarPrestado();
 
-        // 5) Crear préstamo
+        // 6) Crear préstamo
         var prestamo = new Prestamo(
             req.UsuarioId,
             req.EjemplarId,
-            DateTime.UtcNow,
+            utcNow,
             req.DiasPrestamo
         );
 
         await _prestamos.AgregarAsync(prestamo, ct);
+
+        // Guardado consistente: persistir préstamo y el cambio del ejemplar
         await _prestamos.GuardarCambiosAsync(ct);
+
+        // Si tu repositorio de ejemplar maneja su propio SaveChanges, mantenlo.
+        // Si NO existe este método en tu interfaz, dime y lo ajusto.
+        await _ejemplares.GuardarCambiosAsync(ct);
 
         return prestamo;
     }

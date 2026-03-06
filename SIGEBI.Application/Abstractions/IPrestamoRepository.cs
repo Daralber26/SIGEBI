@@ -9,5 +9,7 @@ public interface IPrestamoRepository
 
     Task<bool> ExistePrestamoActivoAsync(Guid ejemplarId, CancellationToken ct);
 
-    Task<Prestamo?> ObtenerPorIdAsync(Guid id, CancellationToken ct); // ✅ NUEVO
+    Task<Prestamo?> ObtenerPorIdAsync(Guid id, CancellationToken ct);
+
+    Task<int> ContarPrestamosActivosPorUsuarioAsync(Guid usuarioId, CancellationToken ct);
 }

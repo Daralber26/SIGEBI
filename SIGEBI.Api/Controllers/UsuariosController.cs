@@ -19,22 +19,31 @@ public class UsuariosController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> Registrar(RegisterUserRequest request, CancellationToken ct)
+    public async Task<IActionResult> Registrar([FromBody] RegisterUserRequest request, CancellationToken ct)
     {
+        // validación mínima
+        if (request is null)
+            return BadRequest("Request inválido.");
+
+        if (string.IsNullOrWhiteSpace(request.Nombre) ||
+            string.IsNullOrWhiteSpace(request.Email) ||
+            string.IsNullOrWhiteSpace(request.Password))
+        {
+            return BadRequest("Nombre, email y password son obligatorios.");
+        }
+
         // hash simple (para clase)
         var passwordHash = Convert.ToHexString(
             SHA256.HashData(Encoding.UTF8.GetBytes(request.Password))
         );
 
-        var usuario = new Usuario
-        {
-            Id = Guid.NewGuid(),
-            Nombre = request.Nombre,
-            Email = request.Email,
-            PasswordHash = passwordHash,
-            Activo = true,
-            FechaRegistro = DateTime.UtcNow
-        };
+        // NO object initializer: tu Usuario es de solo lectura (private set)
+        var usuario = new Usuario(
+            Guid.NewGuid(),
+            request.Nombre,
+            request.Email,
+            passwordHash
+        );
 
         _db.Usuarios.Add(usuario);
         await _db.SaveChangesAsync(ct);
@@ -46,7 +55,9 @@ public class UsuariosController : ControllerBase
             usuario.Nombre,
             usuario.Email,
             usuario.Activo,
-            usuario.FechaRegistro
+            FechaRegistro = usuario.FechaRegistro // si tu propiedad se llama FechaRegistro
+            // Si en tu entidad se llama FechaRegistroUtc, cambia a:
+            // FechaRegistro = usuario.FechaRegistroUtc
         });
     }
 }
