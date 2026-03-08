@@ -9,8 +9,6 @@ namespace SIGEBI.Application.Dtos.Recursos;
 public sealed class SaveRecursoDto
 {
     public string Titulo { get; set; } = string.Empty;
-
+    public string Autor { get; set; } = string.Empty;
     public string? Isbn { get; set; }
-
-    public string? Clasificacion { get; set; }
 }

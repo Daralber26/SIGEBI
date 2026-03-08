@@ -8,11 +8,8 @@ namespace SIGEBI.Application.Dtos.Recursos;
 
 public sealed class UpdateRecursoDto
 {
-    public int Id { get; set; }
-
+    public Guid Id { get; set; }
     public string Titulo { get; set; } = string.Empty;
-
+    public string Autor { get; set; } = string.Empty;
     public string? Isbn { get; set; }
-
-    public string? Clasificacion { get; set; }
 }

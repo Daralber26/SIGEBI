@@ -7,7 +7,7 @@ public interface IRecursoService : IBaseService
 {
     Task<IReadOnlyList<RecursoDto>> GetAllActiveAsync(CancellationToken ct = default);
 
-    Task<RecursoDto?> GetByIdAsync(int id, CancellationToken ct = default);
+    Task<RecursoDto?> GetByIdAsync(Guid id, CancellationToken ct = default);
 
     Task AddAsync(SaveRecursoDto dto, CancellationToken ct = default);
 

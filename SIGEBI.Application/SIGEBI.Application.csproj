@@ -7,12 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\SIGEBI.Contracts\SIGEBI.Contracts.csproj" />
-    <ProjectReference Include="..\SIGEBI.Domain\SIGEBI.Domain.csproj" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Services\" />
+    <ProjectReference Include="..\SIGEBI.Contracts\SIGEBI.Contracts.csproj" />
+    <ProjectReference Include="..\SIGEBI.Domain\SIGEBI.Domain.csproj" />
   </ItemGroup>
 
 </Project>

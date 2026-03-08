@@ -8,7 +8,8 @@ using SIGEBI.Application.UseCases.Recursos;
 using SIGEBI.Application.UseCases.Reservas;
 using SIGEBI.Infrastructure.Persistence;
 using SIGEBI.Infrastructure.Repositories;
-using SIGEBI.Api; // para UseApiExceptionHandling y UseApiAuditing
+using SIGEBI.Api;
+using SIGEBI.Application;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -26,16 +27,15 @@ builder.Services.AddScoped<IEjemplarRepository, EjemplarRepositoryEf>();
 builder.Services.AddScoped<IReservaRepository, ReservaRepositoryEf>();
 builder.Services.AddScoped<IPenalizacionRepository, PenalizacionRepositoryEf>();
 
-// Catálogo (calcula copias disponibles)
+// Catálogo
 builder.Services.AddScoped<ICatalogoRepository, CatalogoRepository>();
+
+// Registrar Application (services + use cases)
+builder.Services.AddApplication();
 
 // Casos de uso
 builder.Services.AddScoped<ListarCatalogo>();
 builder.Services.AddScoped<LoginUsuario>();
-
-builder.Services.AddScoped<CrearRecurso>();
-builder.Services.AddScoped<ActualizarRecurso>();
-builder.Services.AddScoped<EliminarRecurso>();
 
 builder.Services.AddScoped<CrearPrestamo>();
 builder.Services.AddScoped<CrearEjemplar>();
@@ -56,7 +56,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-// Middleware global de errores (antes de authorization y controllers)
+// Middleware global de errores
 app.UseApiExceptionHandling();
 
 // Auditoría
