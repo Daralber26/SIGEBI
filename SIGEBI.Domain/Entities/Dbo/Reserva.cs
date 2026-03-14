@@ -5,7 +5,7 @@ public class Reserva
     public Guid Id { get; private set; }
 
     public Guid UsuarioId { get; private set; }
-    public Guid EjemplarId { get; private set; }  // ✅ ahora reserva un ejemplar real
+    public Guid EjemplarId { get; private set; }  // ahora reserva un ejemplar real
 
     public DateTime FechaCreacionUtc { get; private set; }
     public DateTime? FechaCancelacionUtc { get; private set; }
